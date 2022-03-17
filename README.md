@@ -45,3 +45,28 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
      - .permitAll() : 접근을 모두 허용
      - .hasRole("ADMIN") : 인증이 필요, ADMIN 권한만 허용
      - .authenticated() : 인증 필요
+
+### 5강 - 인메모리 유저 추가
+하드하게 유저 정보를 추가하는 방법으로는 properties를 사용한 방법과 시큐리티 설정을 이용하는 방법이 있다.
+#### properties를 사용하는 방법
+
+```  
+spring.security.user.name=admin
+spring.security.user.password=123
+spring.security.user.roles=ADMIN
+```  
+#### 시큐리티 설정에 추가하는 방법
+1. SecurityConfig 에서 AuthenticationManagerBuilder auth를 제공하는 configure메소드를 오버라이드 한다.
+2. auth.inMemoryAuthentication() 호출
+   - 하위 메소드로 withUser(), password(), role() 을 사용하여 유저 정보를 추가 할 수있다.
+```   
+@Override
+protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.inMemoryAuthentication()
+        .withUser("keesun").password("{noop}123").roles("USER").and()
+        .withUser("admin").password("{noop}!@#");
+}
+```
+- {}안에 암호화 방법을 적는다.
+  - noop은 스프링부트 기본 패스워더 인코더 
+    - 비밀번호 앞에 {noop} 프리픽스가 있으면 noop으로 패스워드를 인코딩 한다.
