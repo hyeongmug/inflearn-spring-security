@@ -30,7 +30,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "keesun", roles = "USER")
+    @WithUser
     public void index_user() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
@@ -38,7 +38,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "keesun", roles = "USER")
+    @WithUser
     public void admin_user() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
