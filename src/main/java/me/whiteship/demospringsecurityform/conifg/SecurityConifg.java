@@ -23,6 +23,6 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("keesun").password("{noop}123").roles("USER").and()
-                .withUser("admin").password("{noop}!@#");
+                .withUser("admin").password("{noop}!@#").roles("ADMIN");
     }
 }
