@@ -124,7 +124,7 @@ public PasswordEncoder passwordEncoder() {
     - 스프링 시큐리티 5.0 부터 BCrypt를 사용
     - ex) `passwordEncoder.encode("비밀번호")` -> 기본이 BCrypt 이므로 BCrypt로 암호화 된다.
 
-### 8강 - 스프링 시큐리티 테스트
+### 8강, 9강 - 스프링 시큐리티 테스트
 1. pom.xml 에 spring-security-test 추가
 ``` xml 
 <dependency>
@@ -134,8 +134,8 @@ public PasswordEncoder passwordEncoder() {
     <version>${spring-security.version}</version>
 </dependency>
 ```
-2. 테스트 클래스 추가
-    - with() 메소드를 사용한 방법
+2. MockMvc를 사용해서 권한이 부여된 테스트 유저를 만들어서 특정한 URI로 접속했을 때 접근이 허용되는지 테스트를 할 수 있다.
+     - with() 메소드를 사용한 방법
         <details>
         <summary>소스 보기</summary>
         <div markdown="1">
@@ -285,4 +285,41 @@ public PasswordEncoder passwordEncoder() {
         ```
         </div>
         </details>
-      
+3. MockMvc를 사용해서 폼(로그인 폼 화면)으로 로그인 하는 경우를 테스트 할 수 있다.
+   - formLogin() 을 사용한다.
+        
+       <details>
+       <summary>소스 보기</summary>
+       <div markdown="1">
+    
+       ``` java
+       @Test
+       @Transactional
+       public void login_success() throws Exception {
+           String username = "keesun";
+           String password = "123";
+           Account user = this.createUser(username, password);
+           mockMvc.perform(formLogin().user(user.getUsername()).password(password))
+                   .andExpect(authenticated());
+       }
+    
+       @Test
+       @Transactional
+       public void login_fail() throws Exception {
+           String username = "keesun";
+           String password = "123";
+           Account user = this.createUser(username, password);
+           mockMvc.perform(formLogin().user(user.getUsername()).password("12345"))
+                   .andExpect(authenticated());
+       }
+    
+       private Account createUser(String username, String password) {
+           Account account = new Account();
+           account.setUsername(username);
+           account.setPassword(password);
+           account.setRole("USER");
+           return  accountService.createNew(account);
+       }
+       ```
+       </div>
+       </details>
