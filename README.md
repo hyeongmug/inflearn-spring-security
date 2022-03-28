@@ -28,7 +28,7 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
     }
 }
 ```
-- SecurityConfig 는 WebSecurityConfigurerAdapter 를 상속 받는다.
+- WebSecurityConfigurerAdapter 를 상속 받는다.
 - @Configuration 어노테이션 @EnableWebSecurity 어노테이션 필요하다.
 
 요청 URL 별로 인증하는 방법
@@ -323,3 +323,58 @@ public PasswordEncoder passwordEncoder() {
        ```
        </div>
        </details>
+   
+### 10강 - SecurityContextHolder와 Authentication
+#### SecurityContextHolder 구조
+
+![img_3.png](img_3.png)
+
+#### SecurityContextHolder
+- SecurityContextHolder는 SecurityContext를 제공해 준다.
+  - SecurityContext을 제공하는 기본적인 방법으로 ThreadLocal(한 쓰레드 내에서 공유하는 저장소)을 사용한다.
+
+#### SecurityContext
+- Authentication을 제공한다.
+
+#### Authentication
+- Principal과 GrantAuthority를 제공한다.
+
+#### Principal 
+- 인증된 사용자 정보를 나타낸다.
+  - UserDetailsService에서 리턴한 **UserDetails 타입**의 객체이다.
+  - 최종적으로는 UserDetails 구현체인 **User 타입**
+- Principal은 Authentication 안에 담겨져 있다.
+
+#### GrantAuthority
+- Principal이 가지고 있는 "권한"을 나타낸다.
+  - "ROLE_USER", "ROLE_ADMIN" 등
+- 인증이 된 이후에 **인가와 권한**을 확인 하기 위해 사용된다.
+
+#### Credentials
+- 자격 증명을 나타냅니다. 예를 들면 password가 될 수 있습니다.
+
+#### UserDetails 
+- 애플리케이션이 가지고 있는 유저 정보와 스프링 시큐리티가 사용하는 Authentication 객체 사이의 어댑터.
+
+#### UserDetailService
+- 유저 정보를 UserDetails 타입으로 가져오는 DAO (Data Access Object) 인터페이스
+- 구현은 마음대로 할 수 있다. 
+- **UserDetails를 리턴 한다.**
+
+#### 실습 코드
+디버거를 사용해서 정보가 무엇 무엇이 있는지 확인해 본다.
+``` java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+Object principal = authentication.getPrincipal();
+Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+Object credentials = authentication.getCredentials();
+boolean authenticated = authentication.isAuthenticated();
+```
+
+코드는 SecurityContextContext 하나만 기억하고 있으면 점을 찍어서 자동완성으로 쉽게 작성할 수 있다.
+ 
+![img.png](img.png)
+ 
+![img_2.png](img_2.png)
+
+![img_1.png](img_1.png)
