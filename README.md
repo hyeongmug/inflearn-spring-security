@@ -378,3 +378,23 @@ boolean authenticated = authentication.isAuthenticated();
 ![img_2.png](img_2.png)
 
 ![img_1.png](img_1.png)
+
+### 12강 - AuthenticationManager와 Authentication
+인증이 어떻게 이루어지고, 그 인증이 이루어지는 과정에 어떠한 일들이 벌어질수 있는지를 살펴본다.
+#### AuthenticationManager 인터페이스
+- 실제로 Authentication 을 만들고 인증을 처리한다.
+- AuthenticationManager에는 authenticate 메서드 하나만 존재한다.
+    ``` java
+      Authentication authenticate(Authentication authentication) throws AuthenticationException;
+    ```
+  - authenticate 메소드에서 인자로 받는 authentication과 리턴하는 authentication의 차이
+    - 인자로 받은 authentication 객체의 인증 정보가 유효하면 실제로 인증 처리된 authentication 객체를 리턴한다.
+    - 실제로 인증된 authentication은 UserDetailsService가 리턴한 UserDetails 객체, 즉 principal 객체를 담고 있다.  
+    - **인자 authentication**
+      - ![img_4.png](img_4.png)
+    - **리턴 authentication**
+      - ![img_5.png](img_5.png)
+
+- 기본 구현체는 ProviderManager 이다.
+- ProviderManager 로 인증이 되는 과정
+  - ProviderManager ==> 다른 Provider에 위임 ==> DaoAuthenticationProvider 에서 UserDetailsService의 loadUserByUsername 메서드를 호출한다.
