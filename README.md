@@ -418,3 +418,26 @@ public class AccountContext {
 ```
 - SecurityContextHolder 에서 getContext()로 SecurityContext를 꺼내오는 것과 같은 방법이다.
 
+### 13강 - Authentication과 AuthenticationManager
+AuthenticationManager를 통해서 인증을 마친 Authentication 객체가 언제 SecurityContextHolder 안으로 들어가는지 살펴본다.
+- 크게 두가지의 Filter가 SecurityContextHolder에 Authentication 객체를 넣어준다.
+  - **UsernamePasswordAuthenticationFilter**
+    - 폼인증을 처리하는 시큐리티 필터이다. 
+    - 인증된 Authentication객체를 SecurityContextHolder에 넣어준다.
+  - **SecurityContextPersistenceFilter**
+    - SecurityContext를 HTTP session에 캐시(기본 전략)하여 여러 요청에서 Authentication을 공유할 수 있도록 공유하는 필터이다.
+    - 여러 요청시에도 **인증한 유저는 동일한 Authentication**을 갖을 수 있게 해준다.
+
+#### 처리 순서
+1. 요청이 이루어 진다.
+2. SecurityContextPersisenceFilter는 캐싱하고 있는 SecurityContext를 읽어온다. 
+3. 읽어온 SecurityContext을 SecurityCotextHolder에 넣는다.
+4. UsernamePasswordAuthenticationFilter로 체인되어 인증이 이루어진다.
+5. 인증이 성공하면 UsernamePasswordAuthenticationFilter의 부모 클래스인 AbstractAuthenticationProcessingFilter에 있는 successfulAuthentication 메소드가 실행 된다.
+6. successfulAuthentication 메소드에서 최종적으로 authentication가 set된다.
+    ``` java
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
+    context.setAuthentication(authResult);
+    SecurityContextHolder.setContext(context);
+    ```
+   
