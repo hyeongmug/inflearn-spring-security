@@ -398,3 +398,23 @@ boolean authenticated = authentication.isAuthenticated();
 - 기본 구현체는 ProviderManager 이다.
 - ProviderManager 로 인증이 되는 과정
   - ProviderManager ==> 다른 Provider에 위임 ==> DaoAuthenticationProvider 에서 UserDetailsService의 loadUserByUsername 메서드를 호출한다.
+
+### 12강 - ThreadLocal
+- java.lang 패키지에서 기본적으로 제공하는 기능
+- 쓰레드 범위 내에서 사용하는 변수
+``` java
+public class AccountContext {
+
+    private static final ThreadLocal<Account> ACCOUNT_THREAD_LOCAL = new ThreadLocal<>();
+
+    public static void setAccount(Account account) {
+        ACCOUNT_THREAD_LOCAL.set(account);
+    }
+
+    public static Account getAccount() {
+        return ACCOUNT_THREAD_LOCAL.get();
+    }
+}
+```
+- SecurityContextHolder 에서 getContext()로 SecurityContext를 꺼내오는 것과 같은 방법이다.
+
