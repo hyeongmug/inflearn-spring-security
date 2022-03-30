@@ -29,7 +29,8 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
 }
 ```
 - WebSecurityConfigurerAdapter 를 상속 받는다.
-- @Configuration 어노테이션 @EnableWebSecurity 어노테이션 필요하다.
+- @Configuration 어노테이션 @EnableWebSecurity 어노테이션을 추가한다.
+- @EnableWebSecurity은 없어도 스프링 부트 자동설정이 자동으로 추가해준다.
 
 요청 URL 별로 인증하는 방법
 
@@ -441,3 +442,47 @@ AuthenticationManager를 통해서 인증을 마친 Authentication 객체가 언
     SecurityContextHolder.setContext(context);
     ```
    
+### 14강 - 시큐리티 Filter와 FilterChainProxy
+#### 스프링 시큐리티가 제공하는 15개의 필터들
+1. WebAsyncManagerIntegrationFilter
+2. SecurityContextPersistenceFilter
+3. HeaderWriteFilter
+4. CsrfFilter
+5. LogoutFilter
+6. UsernamePasswordAuthenticationFilter
+7. DefaultLoginPageGeneratingFilter
+8. DefaultLogoutPageGeneratingFilter
+9. BasicAuthenticationFilter
+10. RequestCacheAwareFilter
+11. SecurityContextHolderAwareRequestFilter
+12. AnonymousAuthenticationFilter
+13. SessionManagementFilter
+14. ExceptionTranslationFilter
+15. FilterSecurityInterceptor
+
+- FilterChainProxy에서 위 필터들을 순차적으로 실행 시킨다.
+- SecurityConfig 는 여러개 만들수 있으며 SecurityConfig 하나가 하나의 체인이다.
+- 실행할 필터들의 목록이 만들어지는 곳은 SecurityConfig이다.
+- SecurityConfig에서의 설정에 따라서 필터 갯수가 달라진다.
+
+``` java
+protected void configure(HttpSecurity http) throws Exception {
+    http
+        .antMatcher("/account/**")
+            .authorizeRequests()
+            .anyRequest().permitAll();
+}
+```
+- 필터 갯수가 12개이다.
+
+``` java
+protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+        .mvcMatchers("/", "/info", "/account/**").permitAll()
+        .mvcMatchers("/admin").hasRole("ADMIN")
+        .anyRequest().authenticated();
+    http.formLogin();
+    http.httpBasic();
+}
+```
+- 필터 갯수가 15개이다.
