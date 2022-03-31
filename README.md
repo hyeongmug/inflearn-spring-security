@@ -139,7 +139,7 @@ public PasswordEncoder passwordEncoder() {
      - with() 메소드를 사용한 방법
         <details>
         <summary>소스 보기</summary>
-        <div markdown="1">
+        <div>
 
         ``` java
         @RunWith(SpringRunner.class)
@@ -184,7 +184,7 @@ public PasswordEncoder passwordEncoder() {
     - 어노테이션을 사용한 방법
         <details>
         <summary>소스 보기</summary>
-        <div markdown="1">
+        <div>
 
         ``` java
         @RunWith(SpringRunner.class)
@@ -233,7 +233,7 @@ public PasswordEncoder passwordEncoder() {
     - 커스컴 어노테이션을 만들어서 사용하기
         <details>
         <summary>소스 보기</summary>
-        <div markdown="1">
+        <div>
 
         ``` java
         @Retention(RetentionPolicy.RUNTIME)
@@ -291,7 +291,7 @@ public PasswordEncoder passwordEncoder() {
         
        <details>
        <summary>소스 보기</summary>
-       <div markdown="1">
+       <div>
     
        ``` java
        @Test
@@ -460,7 +460,7 @@ AuthenticationManager를 통해서 인증을 마친 Authentication 객체가 언
 14. ExceptionTranslationFilter
 15. FilterSecurityInterceptor
 
-- FilterChainProxy에서 위 필터들을 순차적으로 실행 시킨다.
+- **FilterChainProxy**에서 위 필터들을 순차적으로 실행 시킨다.
 - SecurityConfig 는 여러개 만들수 있으며 SecurityConfig 하나가 하나의 체인이다.
 - 실행할 필터들의 목록이 만들어지는 곳은 SecurityConfig이다.
 - SecurityConfig에서의 설정에 따라서 필터 갯수가 달라진다.
@@ -486,3 +486,18 @@ protected void configure(HttpSecurity http) throws Exception {
 }
 ```
 - 필터 갯수가 15개이다.
+
+### 15강 - DelegatingFilterProxy와 FilterChainProxy
+요청을 했을 때 어떻게 FilterChainProxy 까지 들어가지는지 알아본다.
+
+#### DelegatingFilterProxy
+- 이름에서 암시하듯 자기가 처리를 하지 않고 다른 빈에게 위임을 하고 싶을 때 사용하는 서블릿 필터이다.
+- 위임하기 위해서는 위임하려는 빈의 이름을 지정 해줘야된다.
+
+FilterChainProxy은 DelegatingFilterProxy을 통해서 위임된다.
+- AbstractSecurityWebApplicationInitializer 에서 'springSecurityFilterChain' 이라는 이름으로 위임된다.
+``` java
+String filterName = "springSecurityFilterChain";
+DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(filterName);
+```
+
