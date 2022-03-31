@@ -520,3 +520,28 @@ DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(filt
   - RoleHierarchyVoter
     - 계층형 ROLE을 지원한다.
     - ex) ADMIN > MANAGER > USER
+
+### 17강 - RoleHierarchy로 계층형 ROLE 설정 방법
+``` java
+public SecurityExpressionHandler expressionHandler() {
+    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+
+    DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+    handler.setRoleHierarchy(roleHierarchy);
+
+    return handler;
+}
+
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+            .mvcMatchers("/", "/info", "/account/**").permitAll()
+            .mvcMatchers("/admin").hasRole("ADMIN")
+            .mvcMatchers("/user").hasRole("USER")
+            .anyRequest().authenticated()
+            .expressionHandler(expressionHandler());
+    http.formLogin();
+    http.httpBasic();
+}
+```
