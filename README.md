@@ -501,3 +501,22 @@ String filterName = "springSecurityFilterChain";
 DelegatingFilterProxy springSecurityFilterChain = new DelegatingFilterProxy(filterName);
 ```
 
+### 16강 - AccessDecisionManager
+지금까지는 인증(Authentication)을 다루는 부분을 쭉 살펴봤다면, 이제부터는 허가 (Access Control 또는 Authorization)을 다루는 인터페이스를 중심으로 살펴본다.
+#### AccessDecisionManager
+- 이미 인증을 거친 사용자가 특정한 서버의 리소스에 접근을 하려고 할 때 그것을 허용할 것인가, 그게 유용한 요청인가를 판단하는 인터페이스 이다.
+- Access Control 결정을 내리는 인터페이스로, 구현체 3가지를 기본으로 제공한다.
+  - **AffirmativeBased**: 여러 Voter 중에 한명이라도 허용하면 허용한다. (기본 구현체) 
+    - 허용하지 않으면 Exception이 발생한다.
+  - ConsensusBased: 다수결 (사용하는 경우가 흔하지 않다)
+  - UnanimousBased: 만장일치
+#### AccessDecisionVoter
+  - 해당 Authentication이 특정한 Object에 접근할 때 필요한 ConfigAttributes를 만족하는지 확인한다.
+      - 위에서 말한 특정한 Object라 함은 접근하려는 대상인 mvcMatchers("/admin") 등을 말하고
+      - ConfigAttributes는 permitAll(), hasRole("xxx") 등을 말한다.
+  - **WebExpressionVoter**
+    - 웹 시큐리티에서 사용하는 기본 구현체이다.
+    - ROLE_Xxxx가 매치하는지 확인한다.
+  - RoleHierarchyVoter
+    - 계층형 ROLE을 지원한다.
+    - ex) ADMIN > MANAGER > USER
