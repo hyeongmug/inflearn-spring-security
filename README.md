@@ -551,3 +551,22 @@ AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
 #### FilterSecurityInterceptor
 - AccessDecisionManager를 사용하여 Access Control 또는 예외 처리를 하는 필터이다.
 - 대부분의 경우 FilterChainProxy의 제일 마지막 필터로 들어있다.
+
+### 중간 정리(12강 ~ 18강)
+#### 인증과 인가 처리의 과정 요약
+- `ScurityContextHolder`가 `Authentication`을 가지고 있다.
+- `Authentication`은 `AuthenticationManager`를 통해서 인증을 한다.
+- 결과로 나온 `Authentication`을 다시 `SecurityContextHolder`에 넣어준다.
+- 그런 역할을 하는게 `UsernamePasswordAuthenticationFilter`이다.
+- 그런 다음에 `SecurityContextPersistenceFilter`에서도 한다.
+- 이런 필터들은 `FilterChainProxy`를 통해서 묶여 있다.
+- `FilterChainProxy`가 팔터들을 일일이 순차적으로 실행을 해준다.
+- 그런데 이 `FilterChainProxy`도 사실상 `DelegatingFilterProxy`를 통해서 요청을 전달 받은 것이다.
+- `DelegatingFilterProxy`는 스프링 부트를 사용할 떄는 자동으로 등록 되기 때문에 우리가 신경을 쓸 필요가 거의 없다.
+- 혹시라도 스프링 부트 없이 쓸 때는 `AbstractSecurityWebApplicationInitializer`를 상속 받아서 쓰면 된다.
+- 그러면 `DelegatingFilterProxy`가 자동으로 등록 된다.
+- 이렇게 해서 인증까지 봤는데 인가(Access Control)는 누가 하냐면 `AccessDecisionManager`가 한다.
+- `AccessDecisionManager`가 내부적으로 `AccessDecisionVoter` 여러 개를 쓰고 있다.
+- 그리고 `AccessDecisionManager`는 `FilterSecurityInterceptor`가 사용을 하는데 `FilterChainProxy` 필더 중에 하나이다. 
+
+다음 수업에서는 인증과 인가 처리시에 발생하는 예외가 어떻게 처리 되는지 왜 dashboard를 요청했는데 login페이지로 가는지에 대해서 살펴본다. 
