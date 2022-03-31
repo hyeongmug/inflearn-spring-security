@@ -328,7 +328,7 @@ public PasswordEncoder passwordEncoder() {
 ### 10강 - SecurityContextHolder와 Authentication
 #### SecurityContextHolder 구조
 
-![img_3.png](img_3.png)
+![img_3.png](img_3.png)강
 
 #### SecurityContextHolder
 - SecurityContextHolder는 SecurityContext를 제공해 준다.
@@ -545,3 +545,9 @@ protected void configure(HttpSecurity http) throws Exception {
     http.httpBasic();
 }
 ```
+
+### 18강 - FilterSecurityInterceptor
+AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
+#### FilterSecurityInterceptor
+- AccessDecisionManager를 사용하여 Access Control 또는 예외 처리를 하는 필터이다.
+- 대부분의 경우 FilterChainProxy의 제일 마지막 필터로 들어있다.
