@@ -570,3 +570,15 @@ AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
 - 그리고 `AccessDecisionManager`는 `FilterSecurityInterceptor`가 사용을 하는데 `FilterChainProxy` 필더 중에 하나이다. 
 
 다음 수업에서는 인증과 인가 처리시에 발생하는 예외가 어떻게 처리 되는지 왜 dashboard를 요청했는데 login페이지로 가는지에 대해서 살펴본다. 
+
+### 19강 - ExceptionTranslationFilter
+앞서 본 FilterSecurityInterceptor에서 발생한 AccessDeniedException과 AuthenticationException을 처리 하는 필터
+- **AuthenticationException(인증 예외) 발생시**
+  - AuthenticationEntryPoint 실행
+  - AbstractSecurityInterceptor 하위 클래스(ex: FilterSecurityInterceptor)에서 발생하는 예외만 처리한다.
+  - 그렇다면 UsernamePasswordAuthenticationFilter에서 발생한 인증 에러는 ? 
+    - UsernamePasswordAuthenticationFilter 안에서 failureHandler로 처리한다.
+      - 세션에다 에러를 담아둔 다음에, 로그인 페이지에서 에러메세지를 출력 한다.
+- **AccessDeniedException(인허가 예외) 발생시**
+  - 익명 사용자라면 AuthenticationEntryPoint를 실행한다.
+  - 익명 사용자가 아니면 AccessDeniedHandler에게 위임한다.
