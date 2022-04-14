@@ -582,3 +582,6 @@ AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
 - **AccessDeniedException(인허가 예외) 발생시**
   - 익명 사용자라면 AuthenticationEntryPoint를 실행한다.
   - 익명 사용자가 아니면 AccessDeniedHandler에게 위임한다.
+
+### 20강 - 스프링 시큐리티 아키텍처 정리
+![img_6.png](img_6.png)
