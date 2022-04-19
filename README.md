@@ -585,3 +585,50 @@ AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
 
 ### 20강 - 스프링 시큐리티 아키텍처 정리
 ![img_6.png](img_6.png)
+
+시큐리티 컨테이너에 요청이 들어오면 서블릿 필터 중에서 DeligatingFilterProxy가 FilterChainProxy라는 빈 이름으로 위임해 요청들을 처리한다. 여러 시큐리티 필터들은 내부적으로 체인 형태로 가지고 있다. 
+
+FilterChainProxy은 WebSecurity를 가지고 만든다. WebSecurityConfiguration 을 사용하면 WebSecurity를 가지고 FilterChainProxy를 만든다. 이 체인이 DeligatingFilterProxy 필터가 위임하는 바로 그 체인이다. WebSecurityConfiguration은 WebSecurityConfigurationAdapter로 커스터마이징 할 수 있다. 
+
+시큐리티 필터들이 사용하는 주요한 객체들이 있는데, 특히 인증과 관련해서는 AuthenticationManager를 사용한다. 그리고 인가(AccessControl)와 관련해서는 AccessDecisionManager를 사용한다. 인증에서 가장 중요한 이터페이스는 AuthenticationManager이고 구현체로는 대부분 기본적으로 제공되는 구현체인 ProviderManager 를 사용한다. 
+
+ProviderManager는 다른 여러 AuthenticationProvider를 사용해서 인증을 처리한다. 그 중에 하나가 DaoAuthenticationProvider이다. DaoAuthenticationProvider는 UserDetailsService라는 Dao인터페이스를 사용해서 데이터에서 읽어온 유저정를 사용해서 인증을 한다. 데이터에서 읽어온 유저정보와 사용자가 입력한 username, password 가 일치하는지 확인하는 식으로 인증을 거친다. 인증에 성공하면 그 인증정보를 SecurityContextHolder에 넣어 놓고 어플리케이션 전반에 걸쳐서 사용한다. 
+
+SecurityContextHolder안에 들어있는 Authentication 정보에는 Principal과 GrantedAuthorities가 있다. 이 정보들은 인증을 한 다음에 담기게 된다. 혹은 세션에 저장이 되고, 세션에 저장되어있던 정보가 SecurityContextPersistenceFilter에 의해 읽혀지기도 한다. 그렇게 인증이 됬다면 최종적으로 인가를 처리하는 필터인 FilterSecurityInterceptor가 AccessDecisionManager를 사용해서 인가 처리를 한다. 
+
+현재 인증되어져 있는 Authentication이 접근하려는 리소스(특정 URL, 특정 메서드)에 적절한 ROLE을 가지고 있는지를 확인한다. 확인하는 방법은 기본적으로 3가지가 있다. 그 중에 AffirmativeBased를 기본전략으로 사용한다. AffirmativeBased은 여러 AccessDecisionVoter 중에 한명이라도 허용한다면 리소소를 허용한다. AffirmativeBased 말고도 다수결(ConsensusBased), 만장일치(UnanimousBased)가 있다. 
+
+AffirmativeBased가 사용하는 Voter 중에 WebExpressionVoter는 SecurityExpressionHandler를 사용해서 Expression을 처리한다. SecurityExpressionHandler을 사용해서 계층형 ROLE을 설정할 수 있다.
+
+### 21강 - 스프링 시큐리티 ignoring() 1부
+WebSecurity의 ignoring()을 사용해서 시큐리티 필터 적용을 제외할 요청을 설정할 수 있다.
+
+- 현재 웹페이지를 요청 했을 때 모든 요청에 대해 모든 시큐리티 필터들을 적용한다.
+
+- 파비콘에 관련된 요청 처리를 아무 것도 하지 않았을 경우에 http://localhost:8080/ 로 웹페이지를 요청 할때 현재는 총 3가지의 요청이 간다. 
+
+![img_7.png](img_7.png)
+
+1. localhost 요청을 보내면 favicon.ico 요청을 보낸다. 
+2. 이 요청이 스프링 시큐리티 (.anyRequest().authenticated())에 걸려서 인증을 필요로 하는 요청으로 처리가 된다.
+3. login요청으로 이어진다.
+
+- 제대로 된 것 같이 보이지만, favicon.ico로 인해 필요 없는 로그인 요청이 생겼다.
+- 그래서 이런 경우에, static 리소스 요청이면 시큐리티 필터를 적용 시키지 않도록 설정할 수 있다.
+  - SecurityConfig에서 Websecurity를 받는 configure 메소드를 오버라이딩 한다. 
+  - 제외하고 싶은 리소스의 URI 패턴으로 제외하고 싶을 떄는 mvcMatchers를 사용한다.
+    ``` java
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers("/favicon.ico");
+    }
+    ```
+  - static 리소스 전체를 제외하고 싶을 떄는 requestMatchers를 사용한다.
+    ``` java
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+    ```
+    - 스프링부트가 제공하는 PathRequest를 사용해서 정적 자원 요청을 스프링 시큐리티 필터를 적용하지 않도록 설정한다.
+  
