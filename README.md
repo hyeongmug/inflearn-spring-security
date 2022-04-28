@@ -328,7 +328,7 @@ public PasswordEncoder passwordEncoder() {
 ### 10강 - SecurityContextHolder와 Authentication
 #### SecurityContextHolder 구조
 
-![img_3.png](img_3.png)강
+![img_3.png](assets/img_3.png)강
 
 #### SecurityContextHolder
 - SecurityContextHolder는 SecurityContext를 제공해 준다.
@@ -374,11 +374,11 @@ boolean authenticated = authentication.isAuthenticated();
 
 코드는 SecurityContextContext 하나만 기억하고 있으면 점을 찍어서 자동완성으로 쉽게 작성할 수 있다.
  
-![img.png](img.png)
+![img.png](assets/img.png)
  
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
-![img_1.png](img_1.png)
+![img_1.png](assets/img_1.png)
 
 ### 12강 - AuthenticationManager와 Authentication
 인증이 어떻게 이루어지고, 그 인증이 이루어지는 과정에 어떠한 일들이 벌어질수 있는지를 살펴본다.
@@ -392,9 +392,9 @@ boolean authenticated = authentication.isAuthenticated();
     - 인자로 받은 authentication 객체의 인증 정보가 유효하면 실제로 인증 처리된 authentication 객체를 리턴한다.
     - 실제로 인증된 authentication은 UserDetailsService가 리턴한 UserDetails 객체, 즉 principal 객체를 담고 있다.  
     - **인자 authentication**
-      - ![img_4.png](img_4.png)
+      - ![img_4.png](assets/img_4.png)
     - **리턴 authentication**
-      - ![img_5.png](img_5.png)
+      - ![img_5.png](assets/img_5.png)
 
 - 기본 구현체는 ProviderManager 이다.
 - ProviderManager 로 인증이 되는 과정
@@ -584,7 +584,7 @@ AccessDecisionManager가 어디서 사용하고 있는지 알아본다.
   - 익명 사용자가 아니면 AccessDeniedHandler에게 위임한다.
 
 ### 20강 - 스프링 시큐리티 아키텍처 정리
-![img_6.png](img_6.png)
+![img_6.png](assets/img_6.png)
 
 시큐리티 컨테이너에 요청이 들어오면 서블릿 필터 중에서 DeligatingFilterProxy가 FilterChainProxy라는 빈 이름으로 위임해 요청들을 처리한다. 여러 시큐리티 필터들은 내부적으로 체인 형태로 가지고 있다. 
 
@@ -604,10 +604,9 @@ AffirmativeBased가 사용하는 Voter 중에 WebExpressionVoter는 SecurityExpr
 WebSecurity의 ignoring()을 사용해서 시큐리티 필터 적용을 제외할 요청을 설정할 수 있다.
 
 - 현재 웹페이지를 요청 했을 때 모든 요청에 대해 모든 시큐리티 필터들을 적용한다.
-
 - 파비콘에 관련된 요청 처리를 아무 것도 하지 않았을 경우에 http://localhost:8080/ 로 웹페이지를 요청 할때 현재는 총 3가지의 요청이 간다. 
 
-![img_7.png](img_7.png)
+![img_7.png](assets/img_7.png)
 
 1. localhost 요청을 보내면 favicon.ico 요청을 보낸다. 
 2. 이 요청이 스프링 시큐리티 (.anyRequest().authenticated())에 걸려서 인증을 필요로 하는 요청으로 처리가 된다.
@@ -631,4 +630,17 @@ WebSecurity의 ignoring()을 사용해서 시큐리티 필터 적용을 제외�
     }
     ```
     - 스프링부트가 제공하는 PathRequest를 사용해서 정적 자원 요청을 스프링 시큐리티 필터를 적용하지 않도록 설정한다.
-  
+
+### 22강 - 스프링 시큐리티 ignoring() 2부
+ignoring() 방법 중에는 아래 처럼 HttpSecurity를 사용해도 되지만 권장하지 않는다.
+``` java
+http.authorizeRequests()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
+```
+- 결과는 똑같지만 시큐리티 적용을 아예 안할 것 이라면 "21강 - 스프링 시큐리티 ignoring() 1부" 에서 소개한 방법이 더 추천 하는 방법이다.
+- 왜냐하면, HttpSecurity를 받는 configure에서 authorizeRequests()에 걸리는 요청들은 모두 필터 체인(15개 필터)을 거치기 때문이다.   
+
+
+
+
+
