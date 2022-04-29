@@ -640,7 +640,44 @@ http.authorizeRequests()
 - 결과는 똑같지만 시큐리티 적용을 아예 안할 것 이라면 "21강 - 스프링 시큐리티 ignoring() 1부" 에서 소개한 방법이 더 추천 하는 방법이다.
 - 왜냐하면, HttpSecurity를 받는 configure에서 authorizeRequests()에 걸리는 요청들은 모두 필터 체인(15개 필터)을 거치기 때문이다.   
 
+### 23강 - WebAsyncManagerIntegrationFilter
+- Async 웹 MVC를 지원하는 필터 
+- 시큐리티 컨텍스트가 원래는 쓰레드 로컬을 사용하기 떄문에 자기자신의 동일한 스레드에서만 컨텍스트가 공유가 된다.
+- 그리고 Async한 기능에서는 다른 쓰레드가 사용되어진다.
+- 그런데 이 필터를 사용하면 다른 쓰레드지만 동일한 시큐리티 컨텍스트를 사용할 수 있다.
 
+스프링 MVC의 Async 기능(핸들러에서 Callable)을 리턴할 수 있는 기능을 사용할 때에도 SecurityContext를 공유하도록 도와주는 필터
+- PreProcess: SecurityContext를 설정한다.
+- Callable: 비록 다른 쓰레드지만 그 안에는 동일한 SecurityContext를 참조할 수 있다.
+- PostProcess: SecurityContext를 정리(clean up)한다.
 
+``` java
+@GetMapping("/async-handler")
+@ResponseBody
+public Callable<String> asyncHandler() {
+    SecurityLogger.log("MVC"); // 이 영역은 톰캣이 할당해 준 nio 쓰레드
+    return new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+            // 이영역은 별도의 쓰레드에서 동작
+            SecurityLogger.log("Callable");
+            return "Async Handler";
+        }
+    };
+}
+```
+- Callable을 리턴하면 call 안의 내용이 처리되기 전에 이 Request를 처리하고 있던 쓰레드를 반환한다.
+- call 안에서 하는 일이 완료가 되었을 때 쯤 그제서야 응답을 내보낸다.
 
+#### 실행 로그
+```
+MVC
+Thread:http-nio-8080-exec-3
+principal: org.springframework.security.core.userdetails.User [Username=keesun, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_USER]]
+Callable
+Thread:task-1
+principal: org.springframework.security.core.userdetails.User [Username=keesun, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[ROLE_USER]]
+```
 
+- 쓰레드가 다름에도 불구하고 동일한 principal이 참조 되었다.
+- 이렇게 될 수 있도록 도와주는 필터가 WebAsyncManagerIntegrationFilter 이다.
