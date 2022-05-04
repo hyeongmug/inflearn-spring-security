@@ -3,9 +3,7 @@ package me.whiteship.demospringsecurityform.form;
 import me.whiteship.demospringsecurityform.account.AccountContext;
 import me.whiteship.demospringsecurityform.account.AccountRepository;
 import me.whiteship.demospringsecurityform.common.SecurityLogger;
-import org.aspectj.weaver.ast.Call;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +15,11 @@ import java.util.concurrent.Callable;
 @Controller
 public class SampleController {
 
-    @Autowired SampleService sampleService;
+    @Autowired
+    SampleService sampleService;
 
-    @Autowired AccountRepository accountRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
@@ -51,7 +51,7 @@ public class SampleController {
         return "admin";
     }
 
-    @GetMapping("/User")
+    @GetMapping("/user")
     public String user(Model model, Principal principal) {
         model.addAttribute("message", "Hello User, " + principal.getName());
         return "user";
@@ -69,5 +69,14 @@ public class SampleController {
                 return "Async Handler";
             }
         };
+    }
+
+    @GetMapping("/async-service")
+    @ResponseBody
+    public String asyncService() {
+        SecurityLogger.log("MVC, before async service");
+        sampleService.asyncService();
+        SecurityLogger.log("MVC, after async service");
+        return "Async Service";
     }
 }

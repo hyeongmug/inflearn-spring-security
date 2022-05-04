@@ -681,3 +681,48 @@ principal: org.springframework.security.core.userdetails.User [Username=keesun, 
 
 - 쓰레드가 다름에도 불구하고 동일한 principal이 참조 되었다.
 - 이렇게 될 수 있도록 도와주는 필터가 WebAsyncManagerIntegrationFilter 이다.
+
+### 24강 - 스프링 시큐리티와 @Async
+이번 시간에는 지난 시간에 이어서 Async한 기능과 스프링 시큐리티가 어떻게 동작 하는지 알아본다. 
+#### @Async 사용하기
+``` java
+@GetMapping("/async-service")
+@ResponseBody
+public String asyncService() {
+    SecurityLogger.log("MVC, before async service");
+    sampleService.asyncService();
+    SecurityLogger.log("MVC, after async service");
+    return "Async Service";
+}
+```
+``` java
+@Async
+public void asyncService() {
+    SecurityLogger.log("Async Servuce");
+    System.out.println("Async service is called.");
+}
+```
+``` java
+@SpringBootApplication
+@EnableAsync
+public class DemoSpringSecurityFormApplication {
+    ... 코드 생략 ...
+}
+```
+- @Async 가 있으면 특정 빈안에 있는 메소드를 호출 할 때 별도의 쓰레드를 만들어서 비동기 적으로 호출된다.
+- @Async만 사용한다고 Async하게 동작하지 않는다. 
+- 스프링 부트 설정에 @EnableAsync 을 추가해야 한다.
+- 하지만 위 코드는 principal을 공유하지는 않는다.
+
+#### @Async 사용과 principal 공유
+- 위 코드를 실행 시키면 principal에서 NullPointerException이 발생한다.
+- principal을 공유하게 하려면 .setStrategyName()으로 시큐리티 정보를 어디까지 공유해줄 것인지 설정해 주어야 된다.
+
+``` java
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    ... 코드 생략 ...
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 시큐리티 정보 공유 범위 설정
+}
+```
+- 이렇게 해주면 다른 쓰레드에서도 같은 principal을 공유한다
