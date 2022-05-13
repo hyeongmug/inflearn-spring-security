@@ -726,3 +726,15 @@ protected void configure(HttpSecurity http) throws Exception {
 }
 ```
 - 이렇게 해주면 다른 쓰레드에서도 같은 principal을 공유한다
+
+### 25강 - SecurityContextPersistenceFilter
+- SpringSecurity 영속화 필터
+- 인증을 한 다음에 다른 페이지로 이동해도 다시 인증을 하지 않게 해준다.
+- 여러 요청 간에 SecurityConext 공유를 제공한다.
+- SecurityContextRepository를 사용해서 기존의 SecurityContext를 읽어오거나 초기화한다.
+  - 현재 요청과 관련 있는 SecurityContext를 SecurityContextRepository에서 읽어온다.
+- 처음에 인증 안했을 때 비어있는 SecurityContext를 만드는데도 사용된다.
+- 기본적으로 사용하는 전략은 HTTP Session을 사용한다.
+- Spring-Session과 연동하여 세션 클러스트를 구현할 수 있다. 
+- 모든 인증과 관련된 필터들 보다 더 위에 (전체 필터들 중 2번째) 선언이 되어져 았다.  
+  - 참고로 나중에 커스텀한 인증 필터를 만들어서 적용 하려고 한다면 SecurityContextPersistenceFilter 보다 뒤에 등록 해야 된다.
