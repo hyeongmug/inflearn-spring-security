@@ -758,3 +758,33 @@ protected void configure(HttpSecurity http) throws Exception {
     - (HTTPS를 설정 했을 때만 해당함)
   - XFrameOptionsHeaderWriter: clickjacking 방어.
     - `X-Frame-Option: DENY`
+
+### 27강 - CSRF 어택 방지 필터: CsrfFilter
+#### CSRF
+  - https://namu.wiki/w/CSRF
+  - 인증된 유저의 계정을 사용해 악의적인 변경 요청을 만들어 보내는 기법.
+  - 내가 원치 않는 요청을 임의대로 만들어서 보내는 것
+  - 특히 CORS를 사용할 때 주의 해야 한다.
+    - 타 도메인에서 보내는 요청을 허용하기 때문에...
+#### CsrfFilter
+  - 의도한 사용자만 리소스를 변경할 수 있도록 허용하는 필터
+  - CSRF 토큰을 사용하여 방지한다.
+    - 리소스를 변경할 만한 요청에 대해서 CSRF 토큰을 만들어 보낸다.
+    - Form에서 요청을 보낼 때 CSRF 토큰을 보내서 일치하는지 확인한다.
+    - 기본 로그인 화면에서도 로그인 요청시 hidden으로 CSRF토큰을 보낸다.
+    ```html
+    <form class="form-signin" method="post" action="/login">
+        ... 코드 생략 ...
+        <input name="_csrf" type="hidden" value="643aa72d-6893-4ecc-a4a6-2b1a45faed3b">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+    ```
+  - CSRFFilter를 사용하고 싶지 않을 때
+    ``` java
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        ... 코드 생략 ...
+        http.csrf().disable();
+    }
+    ```
+    
