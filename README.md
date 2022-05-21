@@ -738,3 +738,23 @@ protected void configure(HttpSecurity http) throws Exception {
 - Spring-Session과 연동하여 세션 클러스트를 구현할 수 있다. 
 - 모든 인증과 관련된 필터들 보다 더 위에 (전체 필터들 중 2번째) 선언이 되어져 았다.  
   - 참고로 나중에 커스텀한 인증 필터를 만들어서 적용 하려고 한다면 SecurityContextPersistenceFilter 보다 뒤에 등록 해야 된다.
+
+### 26강 - HeaderWriterFilter
+- 크게 신경쓰지 않아도 되는 필터이다. (설정할 일이 거의 없다)
+- 어떤 일을 하는 지는 알아야 된다.
+- 응답 헤더에 시큐리티 관련 헤더를 추가해 준다.
+  - XContentTypeOptionsHeaderWriter: 마임 타입 스니핑 방어.
+    - `X-Content-Type-Options: nosniff`
+  - XXssProtectionHeaderWriter: 브라우저에 내장된 XSS 필터 적용.
+    - `X-XSS-Protection: 1; mode=`
+    - 브라우저에 내장되어 있는 XSS 필터를 활성화 한다.
+    - 모든 XSS 공격을 막아주는 것은 아니기 때문에 Lucy 같은 XSS 필터를 추가해서 쓰는 것이 좋다.
+  - CacheControlHeadersWriter: 캐시 히스토리 취약점 방어.
+    - `Cache-Control: no-cache, no-store, max-age=0, must-revalidate`
+    - `Expries: 0`
+    - `Pragma: no-cache`
+    - 캐시를 설정 하지 않는 이유는 동적인 리소스의 경우 민감한 정보들이 노출 될 수 있기 때문이다.
+  - HstsHeaderWriter: HTTPS로만 소통하도록 강제.
+    - (HTTPS를 설정 했을 때만 해당함)
+  - XFrameOptionsHeaderWriter: clickjacking 방어.
+    - `X-Frame-Option: DENY`
