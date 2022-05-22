@@ -788,3 +788,74 @@ protected void configure(HttpSecurity http) throws Exception {
     }
     ```
     
+
+### 28강 - CSRF 토큰 사용 예제
+- **SecurityConfig.java**
+  - mvcMatchers에 '/signup' path 추가 
+``` java
+... 코드 생략 ... 
+@Configuration
+@EnableWebSecurity
+public class SecurityConifg extends WebSecurityConfigurerAdapter {
+    ... 코드 생략 ... 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll()
+        ... 코드 생략 ... 
+    }
+}
+ 
+```
+
+- **SignUpController.java**
+``` java
+... 코드 생략 ...
+@Controller
+@RequestMapping("/signup")
+public class SignUpController {
+
+    @Autowired AccountService accountService;
+
+    @GetMapping
+    public String signupForm(Model model) {
+        model.addAttribute("account", new Account());
+        return "signup";
+    }
+
+    @PostMapping
+    public String processSignUp(@ModelAttribute Account account) {
+        account.setRole("USER");
+        accountService.createNew(account);
+        return "redirect:";
+    }
+}
+```
+
+- **signup.html**
+``` html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+</head>
+<body>
+    <form action="/signup" th:action="@{/signup}" th:object="${account}" method="post">
+        <p>Username: <input type="text" th:field="*{username}"></p>
+        <p>Password: <input type="text" th:field="*{password}"></p>
+        <p><input type="submit" value="SignUp"></p>
+    </form>
+</body>
+</html> 
+```
+- **html 화면**
+
+![](assets/img_8.png)
+
+
+- **랜더링된 html 소스 코드**
+  - tymeleaf 2.1 버전 이상 혹은 JSP에서 form:form 태그를 사용하면 CSRF 토큰 input이 자동으로 생성된다.
+
+![img.png](assets/img_9.png)
+

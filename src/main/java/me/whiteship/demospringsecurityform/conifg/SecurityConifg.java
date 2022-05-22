@@ -33,15 +33,15 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/", "/info", "/account/**").permitAll()
+                .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 .mvcMatchers("/user").hasRole("USER")
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler());
         http.formLogin();
         http.httpBasic();
-        http.csrf().disable();
+        //http.csrf().disable();
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 시큐리티 정보 공유 범위 설정
     }
