@@ -1,5 +1,64 @@
-### 강의 주소
-https://www.inflearn.com/course/백기선-스프링-시큐리티
+# [백기선] 인프런 스프링 시큐리티
+- 강의 주소 https://www.inflearn.com/course/백기선-스프링-시큐리티
+## 목차
+- [[백기선] 인프런 스프링 시큐리티](#백기선-인프런-스프링-시큐리티)
+    * [목차](#--)
+    * [학습 정리](#-----)
+        + [3강 - 스프링 시큐리티 연동](#3강---스프링-시큐리티-연동)
+        + [4강 - 스프링 시큐리티 설정하기](#4강---스프링-시큐리티-설정하기)
+        + [5강 - 인메모리 유저 추가](#5강---인메모리-유저-추가)
+            - [properties를 사용하는 방법](#properties를-사용하는-방법)
+            - [시큐리티 설정에 추가하는 방법](#시큐리티-설정에-추가하는-방법)
+        + [6강 - JPA 연동 / UserDetailService 구현](#6강---jpa-연동--userdetailservice-구현)
+        + [7강 - PasswordEncoder](#7강---passwordencoder)
+        + [8강, 9강 - 스프링 시큐리티 테스트](#8강-9강---스프링-시큐리티-테스트)
+        + [10강 - SecurityContextHolder와 Authentication](#10강---securitycontextholder와-authentication)
+            - [SecurityContextHolder 구조](#securitycontextholder-구조)
+            - [SecurityContextHolder](#securitycontextholder)
+            - [SecurityContext](#securitycontext)
+            - [Authentication](#authentication)
+            - [Principal](#principal)
+            - [GrantAuthority](#grantauthority)
+            - [Credentials](#credentials)
+            - [UserDetails](#userdetails)
+            - [UserDetailService](#userdetailservice)
+            - [실습 코드](#실습-코드)
+        + [12강 - AuthenticationManager와 Authentication](#12강---authenticationmanager와-authentication)
+            - [AuthenticationManager 인터페이스](#authenticationmanager-인터페이스)
+        + [12강 - ThreadLocal](#delegatingfilterproxy)
+        + [13강 - Authentication과 AuthenticationManager](#13강---authentication과-authenticationmanager)
+            - [처리 순서](#처리-순서)
+        + [14강 - 시큐리티 Filter와 FilterChainProxy](#14강---시큐리티-filter와-filterchainproxy)
+            - [스프링 시큐리티가 제공하는 15개의 필터들](#스프링-시큐리티가-제공하는-15개의-필터들)
+        + [15강 - DelegatingFilterProxy와 FilterChainProxy](#15강---delegatingfilterproxy와-filterchainproxy)
+            - [DelegatingFilterProxy](#delegatingfilterproxy)
+        + [16강 - AccessDecisionManager](#16----accessdecisionmanager)
+            - [AccessDecisionManager](#accessdecisionmanager)
+            - [AccessDecisionVoter](#accessdecisionvoter)
+        + [17강 - RoleHierarchy로 계층형 ROLE 설정 방법](#17강---rolehierarchy로-계층형-role-설정-방법)
+        + [18강 - FilterSecurityInterceptor](#18강---filtersecurityinterceptor)
+            - [FilterSecurityInterceptor](#filtersecurityinterceptor)
+        + [중간 정리(12강 ~ 18강)](#중간-정리12강--18강)
+            - [인증과 인가 처리의 과정 요약](#인증과-인가-처리의-과정-요약)
+        + [19강 - ExceptionTranslationFilter](#19강---exceptiontranslationfilter)
+        + [20강 - 스프링 시큐리티 아키텍처 정리](#20강---스프링-시큐리티-아키텍처-정리)
+        + [21강 - 스프링 시큐리티 ignoring() 1부](#21강---스프링-시큐리티-ignoring-1부)
+        + [22강 - 스프링 시큐리티 ignoring() 2부](#22강---스프링-시큐리티-ignoring-2부)
+        + [23강 - Async 웹 MVC를 지원하는 필터: WebAsyncManagerIntegrationFilter](#23강---async-웹-mvc를-지원하는-필터-webasyncmanagerintegrationfilter)
+        + [24강 - 스프링 시큐리티와 @Async](#24강---스프링-시큐리티와-async)
+            - [@Async 사용하기](#async-사용하기)
+            - [@Async 사용과 principal 공유](#async-사용과-principal-공유)
+        + [25강 - SpringSecurity 영속화 필터: SecurityContextPersistenceFilter](#25강---springsecurity-영속화-필터-securitycontextpersistencefilter)
+        + [26강 - 시큐리티 관련 헤더 추가하는 필터: HeaderWriterFilter](#26강---시큐리티-관련-헤더-추가하는-필터-headerwriterfilter)
+        + [27강 - CSRF 어택 방지 필터: CsrfFilter](#27강---csrf-어택-방지-필터-csrffilter)
+            - [CSRF](#csrf)
+            - [CsrfFilter](#csrffilter)
+        + [28강 - CSRF 토큰 사용 예제](#28강---csrf-토큰-사용-예제)
+        + [29강 - 로그아웃 처리 필터: LogoutFilter](#29강---로그아웃-처리-필터-logoutfilter)
+            - [LogoutFilter 설정 방법](#logoutfilter-설정-방법)
+        + [30강. 폼 로그인을 처리하는 인증 필터: UsernamePasswordAuthenticationFilter](#30강-폼-로그인을-처리하는-인증-필터-usernamepasswordauthenticationfilter)
+
+
 
 ## 학습 정리
 ### 3강 - 스프링 시큐리티 연동
@@ -328,7 +387,7 @@ public PasswordEncoder passwordEncoder() {
 ### 10강 - SecurityContextHolder와 Authentication
 #### SecurityContextHolder 구조
 
-![img_3.png](assets/img_3.png)강
+![img_3.png](assets/img_3.png)
 
 #### SecurityContextHolder
 - SecurityContextHolder는 SecurityContext를 제공해 준다.
@@ -640,8 +699,7 @@ http.authorizeRequests()
 - 결과는 똑같지만 시큐리티 적용을 아예 안할 것 이라면 "21강 - 스프링 시큐리티 ignoring() 1부" 에서 소개한 방법이 더 추천 하는 방법이다.
 - 왜냐하면, HttpSecurity를 받는 configure에서 authorizeRequests()에 걸리는 요청들은 모두 필터 체인(15개 필터)을 거치기 때문이다.   
 
-### 23강 - WebAsyncManagerIntegrationFilter
-- Async 웹 MVC를 지원하는 필터 
+### 23강 - Async 웹 MVC를 지원하는 필터: WebAsyncManagerIntegrationFilter
 - 시큐리티 컨텍스트가 원래는 쓰레드 로컬을 사용하기 떄문에 자기자신의 동일한 스레드에서만 컨텍스트가 공유가 된다.
 - 그리고 Async한 기능에서는 다른 쓰레드가 사용되어진다.
 - 그런데 이 필터를 사용하면 다른 쓰레드지만 동일한 시큐리티 컨텍스트를 사용할 수 있다.
@@ -669,7 +727,7 @@ public Callable<String> asyncHandler() {
 - Callable을 리턴하면 call 안의 내용이 처리되기 전에 이 Request를 처리하고 있던 쓰레드를 반환한다.
 - call 안에서 하는 일이 완료가 되었을 때 쯤 그제서야 응답을 내보낸다.
 
-#### 실행 로그
+실행 로그
 ```
 MVC
 Thread:http-nio-8080-exec-3
@@ -727,8 +785,7 @@ protected void configure(HttpSecurity http) throws Exception {
 ```
 - 이렇게 해주면 다른 쓰레드에서도 같은 principal을 공유한다
 
-### 25강 - SecurityContextPersistenceFilter
-- SpringSecurity 영속화 필터
+### 25강 - SpringSecurity 영속화 필터: SecurityContextPersistenceFilter
 - 인증을 한 다음에 다른 페이지로 이동해도 다시 인증을 하지 않게 해준다.
 - 여러 요청 간에 SecurityConext 공유를 제공한다.
 - SecurityContextRepository를 사용해서 기존의 SecurityContext를 읽어오거나 초기화한다.
@@ -739,7 +796,7 @@ protected void configure(HttpSecurity http) throws Exception {
 - 모든 인증과 관련된 필터들 보다 더 위에 (전체 필터들 중 2번째) 선언이 되어져 았다.  
   - 참고로 나중에 커스텀한 인증 필터를 만들어서 적용 하려고 한다면 SecurityContextPersistenceFilter 보다 뒤에 등록 해야 된다.
 
-### 26강 - HeaderWriterFilter
+### 26강 - 시큐리티 관련 헤더 추가하는 필터: HeaderWriterFilter
 - 크게 신경쓰지 않아도 되는 필터이다. (설정할 일이 거의 없다)
 - 어떤 일을 하는 지는 알아야 된다.
 - 응답 헤더에 시큐리티 관련 헤더를 추가해 준다.
@@ -884,3 +941,9 @@ public class SignUpController {
     - 로그아웃 한다음에 http session을 invalid 처리 할 것인지 설정, 기본 값 = true, 커스터마이징 할 일이 거의 없다.
   - `.deleteCookies("name");`
     - 쿠키기반의 인증방법을 사용했을 경우에 쿠키를 삭제하려면 쿠키 이름을 인자로 주면 된다.
+
+### 30강 - 폼 로그인을 처리하는 인증 필터: UsernamePasswordAuthenticationFilter
+- 로그인 폼으로 로그인 요청을 했을 때, 그 요청을 처리하는 필터이다.
+- 사용자가 폼에 입력한 usename과 password로 Authentication을 만들고 AuthenticationManager를 사용하여 인증을 시도한다.
+- AuthenticationManager (ProviderManager)는 여러 AuthenticationProvider를 사용하여 인증을 시도한다.
+- 그 중에 DaoAuthenticationProvider는 UserDetailService를 사용하여 UserDetails 정보를 가져와 사용자가 입력한 password와 비교한다.
