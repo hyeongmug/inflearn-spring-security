@@ -43,6 +43,8 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         //http.csrf().disable();
 
+        http.logout().logoutSuccessUrl("/");
+
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 시큐리티 정보 공유 범위 설정
     }
 }

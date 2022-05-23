@@ -859,3 +859,28 @@ public class SignUpController {
 
 ![img.png](assets/img_9.png)
 
+### 29강 - 로그아웃 처리 필터: LogoutFilter
+- 로그아웃 요청을 처리하는 필터이다.
+- 크게 두가지 핸들러가 있다.
+  - LogoutHandler
+    - Composite 타입 객체여서 여러 로그아웃 핸들러를 사용하고 있다.
+    - 크게 두가지가 사용된다.
+      - CsrfLoguntHandler
+      - SecurityContextLogoutHandler
+  - LogoutSuccessHandler
+    - 로그아웃 처리를 끝낸 후에 어떤 처리를 할 것인지를 결정하는 핸들러이다.
+- 로그아웃 했을 때 기본적으로는 로그인 페이지로 리다이렉트 된다. 
+#### LogoutFilter 설정 방법
+  - `http.logout()`
+  - `.logoutUrl("/my/logout")`
+    - 커스텀한 로그인 페이지를 만들었을 경우에 사용한다.
+  - `.logoutSuccessUrl("/")`
+    - 로그아웃 했을 때 리다이렉트 할 URL
+  - `.addLogoutHandler()`
+    - 로그아웃 처리가 다 끝난 다음에 logoutHandler를 별도로 추가할 수 있다.
+  - `.logoutSuccessHandler()`
+    - success 처리를 별도로 하고 싶을 때 사용한다.
+  - `.invalidateHttpSession(true)`
+    - 로그아웃 한다음에 http session을 invalid 처리 할 것인지 설정, 기본 값 = true, 커스터마이징 할 일이 거의 없다.
+  - `.deleteCookies("name");`
+    - 쿠키기반의 인증방법을 사용했을 경우에 쿠키를 삭제하려면 쿠키 이름을 인자로 주면 된다.
