@@ -57,7 +57,13 @@
         + [29강 - 로그아웃 처리 필터: LogoutFilter](#29강---로그아웃-처리-필터-logoutfilter)
             - [LogoutFilter 설정 방법](#logoutfilter-설정-방법)
         + [30강. 폼 로그인을 처리하는 인증 필터: UsernamePasswordAuthenticationFilter](#30강-폼-로그인을-처리하는-인증-필터-usernamepasswordauthenticationfilter)
-
+        + [31강 - DefaultLoginPageGeneratingFilter](#31강---defaultloginpagegeneratingfilter)
+            - [기본 로그인 화면](#기본-로그인-화면)
+        + [32강 - 로그인 / 로그아웃 폼 커스터마이징](#32강---로그인--로그아웃-폼-커스터마이징)
+            - [SecurityConfig.java](#securityconfigjava)
+            - [LogInOutController.java](#loginoutcontrollerjava)
+            - [login.html](#loginhtml)
+            - [logout.html](#logouthtml)
 
 
 ## 학습 정리
