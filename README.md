@@ -947,3 +947,37 @@ public class SignUpController {
 - 사용자가 폼에 입력한 usename과 password로 Authentication을 만들고 AuthenticationManager를 사용하여 인증을 시도한다.
 - AuthenticationManager (ProviderManager)는 여러 AuthenticationProvider를 사용하여 인증을 시도한다.
 - 그 중에 DaoAuthenticationProvider는 UserDetailService를 사용하여 UserDetails 정보를 가져와 사용자가 입력한 password와 비교한다.
+
+### 31강 - DefaultLoginPageGeneratingFilter
+- 기본 로그인 폼 페이지를 생성해주는 필터
+  - GET /login 요청을 처리해주는 필터
+#### 기본 로그인 화면
+![img.png](assets/img_10.png)
+
+- 파라미터 값을 원하는 대로 바꿀 수 있다.
+  - ex) username -> my_username / password -> my_password 로 바꿀 수 있다.
+
+    ``` java
+    http.loginForm()
+            .usernameParameter("my-username")
+            .passwordParameter("my-password");
+    ```
+  - 위와 같은 설정을 주면 로그인 폼 html에서 input 태그의 name 값이 변경된다.
+    ``` html
+    ...
+    <input type="text" id="username" name="my-username" class="form-control" placeholder="Username" required="" autofocus="">
+    ...
+    <input type="password" id="password" name="my-password" class="form-control" placeholder="Password" required="">
+    ...
+    ```
+
+- 로그인 페이지를 새로 만들 수도 있다. 
+    ``` java
+    http.loginForm()
+            .loginPage("/login").permitAll(); // 모든 사용자가 접근할 수 있게 permitAll()을 해줘야 한다.
+    ```
+    - 이렇게 설정한 순간 부터는 커서텀한 로그인 / 로그아웃 페이지를 써야 한다.
+    - 그리고 DefaultLoginPageGeneratingFilter는 사용되지 않는다.
+    - Debugger로 확인 하면 필터 목록에 DefaultLoginPageGeneratingFilter가 없는 것을 확인 할 수 있다.
+    ![](assets/img_11.png)
+

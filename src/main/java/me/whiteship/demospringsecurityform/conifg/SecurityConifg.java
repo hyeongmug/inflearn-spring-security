@@ -39,7 +39,10 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
                 //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler());
-        http.formLogin();
+        http.formLogin()
+                //.usernameParameter("my-username")
+                //.passwordParameter("my-password");
+                .loginPage("/login").permitAll(); // 모든 사용자가 접근할 수 있게 permitAll()을 해줘야 한다.
         http.httpBasic();
         //http.csrf().disable();
 
