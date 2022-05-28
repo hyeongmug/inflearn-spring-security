@@ -980,4 +980,85 @@ public class SignUpController {
     - 그리고 DefaultLoginPageGeneratingFilter는 사용되지 않는다.
     - Debugger로 확인 하면 필터 목록에 DefaultLoginPageGeneratingFilter가 없는 것을 확인 할 수 있다.
     ![](assets/img_11.png)
+    
+### 32강 - 로그인 / 로그아웃 폼 커스터마이징
 
+#### SecurityConfig.java
+``` java
+... 코드 생략 ...
+public class SecurityConifg extends WebSecurityConfigurerAdapter {
+
+    ... 코드 생략...
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        ... 코드 생략 ...
+        http.formLogin()
+                .loginPage("/login").permitAll(); // 모든 사용자가 접근할 수 있게 permitAll()을 해줘야 한다.
+        ... 코드 생략 ...
+    }
+}
+
+```
+
+#### LogInOutController.java
+``` java
+package me.whiteship.demospringsecurityform.account;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LogInOutController {
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/login";
+    }
+    @GetMapping("/logout")
+    public String logoutForm() {
+        return "/logout";
+    }
+}
+```
+
+#### login.html
+``` html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <div th:if="${param.error}">
+        Invalid username or password.
+    </div>
+    <form action="/login" method="post" th:action="@{/login}">
+        <p>Username: <input type="text"></p>
+        <p>Password: <input type="password"></p>
+        <p><input type="submit" value="Login"></p>
+    </form>
+</body>
+</html>
+```
+
+![img.png](assets/img_12.png)
+
+#### logout.html
+``` html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Logout</title>
+</head>
+<body>
+    <h1>Logout</h1>
+    <form action="/logout" method="post" th:action="@{/logiut}">
+        <p><input type="submit" value="Logout"></p>
+    </form>
+</body>
+</html>
+```
+![img_1.png](assets/img_13.png)
