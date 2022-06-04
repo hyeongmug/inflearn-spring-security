@@ -1068,3 +1068,17 @@ public class LogInOutController {
 </html>
 ```
 ![img_1.png](assets/img_13.png)
+
+### 33강 - BasicAuthenticationFilter
+#### Basic 인증이란 ?
+- HTTP 기본 인증 `http.httpBasic()`
+- 요청 헤더에 usernaem과 password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증하는 방식.
+- ex) Authentication: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+  - username:password 를 Base64로 인코딩 한 값 (keesun:123)
+- 보안에 취약하기 때문에 반드시 HTTPS를 사용할 것을 권장. (디코딩 할 수 있기 때문이다.)
+- 보통 브라우저 기반 요청이 클라이언트의 요청을 처리할 때 사용.
+- `curl -u lhm:123 http://localhost:8080` 해주면 `-u lhm:123` 정보를 기반으로 basic authentication 헤더를 만들어서 요청을 보낸다.
+  - 잘못된 인증정보를 보내면 응답을 받을 수 없다.
+#### UsernamePasswordAuthenticationFilter와의 차이
+- UsernamePasswordAuthenticationFilter는 인증정보를 폼에서 읽어오는 것이 BasicAuthenticationFilter는 인증정보를 헤더에서 읽어온다.
+- SecurityContext에 인증정보를 저장되지 않기 때문에 매번 인증정보를 보내야한다.
