@@ -1069,7 +1069,7 @@ public class LogInOutController {
 ```
 ![img_1.png](assets/img_13.png)
 
-### 33강 - BasicAuthenticationFilter
+### 33강 - Basic 인증 처리 필터: BasicAuthenticationFilter
 #### Basic 인증이란 ?
 - HTTP 기본 인증 `http.httpBasic()`
 - 요청 헤더에 usernaem과 password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증하는 방식.
@@ -1082,3 +1082,15 @@ public class LogInOutController {
 #### UsernamePasswordAuthenticationFilter와의 차이
 - UsernamePasswordAuthenticationFilter는 인증정보를 폼에서 읽어오는 것이 BasicAuthenticationFilter는 인증정보를 헤더에서 읽어온다.
 - SecurityContext에 인증정보를 저장되지 않기 때문에 매번 인증정보를 보내야한다.
+
+### 34강 - 요청 캐시 필터: RequestCacheAwareFilter
+- 현재 요청과 관련 있는 캐시된 요청이 있는지 찾아서 적용하는 필터
+  - 캐시된 요청이 없다면, 현재 요청 처리하고 
+  - 캐시된 요청이 있다면, 해당 캐시된 요청 처리한다.
+
+1. 로그인 해야 접근할 수 있는 페이지를 요청한다.
+2. 해당 요청은 권한이 없어서 accessDecisionManager가 판단하에 로그인 페이지로 리다이렉트 시킨다.
+3. 로그인 요청을 처리 다 하고 원래 가려고 했던 요청 페이지로 이동한다.
+
+
+
