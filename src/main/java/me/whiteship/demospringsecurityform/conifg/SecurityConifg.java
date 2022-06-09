@@ -48,6 +48,8 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
 
         http.logout().logoutSuccessUrl("/");
 
+        //http.anonymous().principal("nonMember").authorities("ROLE_NONMEMBER"); // anonymous 커스터마이징
+
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 시큐리티 정보 공유 범위 설정
     }
 }

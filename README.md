@@ -1088,9 +1088,34 @@ public class LogInOutController {
   - 캐시된 요청이 없다면, 현재 요청 처리하고 
   - 캐시된 요청이 있다면, 해당 캐시된 요청 처리한다.
 
-1. 로그인 해야 접근할 수 있는 페이지를 요청한다.
-2. 해당 요청은 권한이 없어서 accessDecisionManager가 판단하에 로그인 페이지로 리다이렉트 시킨다.
-3. 로그인 요청을 처리 다 하고 원래 가려고 했던 요청 페이지로 이동한다.
+#### 예시
+1. 로그인을 하지 않은채 로그인을 필요로하는 페이지로 요청을 보낸다.
+2. AccessDecisionManager 의 판단하에 로그인 페이지로 이동한다.
+3. 로그인 이후에 '캐시해둔 목적지 페이지로의 요청'을 처리해 가려했던 페이지로 이동하게 된다.
+
+### 35강 - 시큐리티 관련 서블릿 스펙 구현 필터: SecurityContextHolderAwareRequestFilter
+시큐리티 관련 서블릿 API를 구현 해주는 필터
+- HttpServletRequest#authentication(HttpServletResponse)
+- HttpServletRequest#login(String, String)
+- HttpServletRequest#logout(logout)
+- AsyncContext#start(Runnable)
+
+RequestCacheAwareFilter 처럼 크게 신경 쓰지 않아도 되는 필터다.
+
+### 36강 - 익명 인증 필터: AnonymousAuthenticationFilter
+인증이 안된 사용자를 AnonymousAuthentication 객체로 만들어서 인증 정보를 SecurityContextHolder에 넣어 준다.
+- 현재 SecurityContext에 Authentication이 null이면 "익명 Authentication"을 만들어 넣어주고, null이 아니면 아무일도 하지 않는다.
+
+기본으로 만들어 사용할 "익명 Authentication"객체를 생성할 수 있다.
+
+``` java
+http.anonymous()
+    .principal("nonMember") // 기본값 anonymousUser
+    .authorities("ROLE_NONMEMBER") // 기본값 ROLE_ANONYMOUS 
+    .key()
+```
+
+but. 굳이 커스터 마이징 할 이유가 없다.
 
 
 
