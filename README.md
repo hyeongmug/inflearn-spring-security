@@ -1117,5 +1117,17 @@ http.anonymous()
 
 but. 굳이 커스터 마이징 할 이유가 없다.
 
+### 37강 - SessionManagementFilter
+세션 변조 방지 전략 설정: sessionFixation
 
+유효하지 않는 세션을 리다이렉트 시킬 URL 설정: invalidSessionUrl
+
+동시성 제어: maximumSessions
+- 추가 로그인을 막을지 여부 설정(기본값, false)
+
+세션 생성 전략: sessionCreationPolicy
+- IF_REQUIRED
+- NEVER
+- STATELESS
+- ALWAYS
 
